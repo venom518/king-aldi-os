@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>KING ALDI OS X</title>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Consolas,monospace;
+}
+
+body{
+background:#050505;
+color:#00ff88;
+overflow:hidden;
+}
+
+#boot{
+position:fixed;
+top:0;
+left:0;
+width:100%;
+height:100%;
+background:#000;
+padding:20px;
+font-size:18px;
+}
+
+#main{
+display:none;
+padding:20px;
+height:100vh;
+}
+
+.logo{
+font-size:32px;
+font-weight:bold;
+color:#b14cff;
+text-shadow:0 0 20px #b14cff;
+margin-bottom:15px;
+}
+
+.panel{
+border:1px solid #333;
+padding:15px;
+border-radius:10px;
+background:rgba(0,0,0,.7);
+margin-bottom:15px;
+}
+
+#output{
+height:50vh;
+overflow:auto;
+}
+
+input{
+width:100%;
+background:none;
+border:none;
+outline:none;
+color:#00ff88;
+font-size:16px;
+}
+
+canvas{
+position:fixed;
+top:0;
+left:0;
+z-index:-1;
+}
+</style>
+</head>
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div id="boot"></div>
+
+<div id="main">
+
+<div class="logo">KING ALDI OS X</div>
+
+<div class="panel">
+AI CORE : ONLINE<br>
+SECURITY : ACTIVE<br>
+NETWORK : SECURE
+</div>
+
+<div class="panel">
+
+<div id="output">
+Selamat datang di KING ALDI OS X<br>
+Ketik <b>help</b> lalu tekan Enter.
+</div>
+
+<br>
+
+<span style="color:#00aaff">king@aldi:~$ </span>
+<input id="cmd" autocomplete="off">
+
+</div>
+
+</div>
+
+<script>
+
+const bootText = [
+"Initializing KING ALDI CORE...",
+"Loading AI Engine...",
+"Loading Security Modules...",
+"Connecting Global Network...",
+"System Ready..."
+];
+
+const boot = document.getElementById("boot");
+let i = 0;
+
+function startBoot(){
+if(i < bootText.length){
+boot.innerHTML += bootText[i] + "<br>";
+i++;
+setTimeout(startBoot,700);
+}else{
+setTimeout(()=>{
+boot.style.display="none";
+document.getElementById("main").style.display="block";
+},1000);
+}
+}
+
+startBoot();
+
+const output = document.getElementById("output");
+const cmd = document.getElementById("cmd");
+
+cmd.addEventListener("keydown",function(e){
+
+if(e.key==="Enter"){
+
+let text = cmd.value.toLowerCase();
+
+output.innerHTML += "<br><span style='color:#00aaff'>king@aldi:~$</span> "+text+"<br>";
+
+switch(text){
+
+case "help":
+output.innerHTML += `
+about<br>
+status<br>
+date<br>
+clear<br>
+matrix<br>
+`;
+break;
+
+case "about":
+output.innerHTML += "KING ALDI OS X v1.0<br>";
+break;
+
+case "status":
+output.innerHTML += "SYSTEM STABLE | AI ONLINE<br>";
+break;
+
+case "date":
+output.innerHTML += new Date()+"<br>";
+break;
+
+case "matrix":
+output.innerHTML += "Matrix mode activated.<br>";
+break;
+
+case "clear":
+output.innerHTML = "";
+break;
+
+default:
+output.innerHTML += "Command not found.<br>";
+}
+
+cmd.value="";
+output.scrollTop=output.scrollHeight;
+
+}
+
+});
+
+const canvas=document.getElementById("matrix");
+const ctx=canvas.getContext("2d");
+
+canvas.width=window.innerWidth;
+canvas.height=window.innerHeight;
+
+const chars="KINGALDI0123456789";
+const fontSize=14;
+const columns=canvas.width/fontSize;
+const drops=[];
+
+for(let x=0;x<columns;x++){
+drops[x]=1;
+}
+
+function draw(){
+
+ctx.fillStyle="rgba(0,0,0,0.05)";
+ctx.fillRect(0,0,canvas.width,canvas.height);
+
+ctx.fillStyle="#00ff88";
+ctx.font=fontSize+"px monospace";
+
+for(let i=0;i<drops.length;i++){
+
+let text=chars[Math.floor(Math.random()*chars.length)];
+
+ctx.fillText(text,i*fontSize,drops[i]*fontSize);
+
+if(drops[i]*fontSize>canvas.height && Math.random()>0.975){
+drops[i]=0;
+}
+
+drops[i]++;
+
+}
+
+}
+
+setInterval(draw,35);
+
+</script>
+
+</body>
+</html>
